@@ -1,0 +1,101 @@
+DROP database SOCIAL_LIBRARY;
+CREATE DATABASE SOCIAL_LIBRARY;
+USE SOCIAL_LIBRARY;
+
+
+CREATE TABLE USERS (
+ID INT auto_increment,
+FULL_NAME VARCHAR (100) NOT NULL,
+ADDRESS VARCHAR (100) NOT NULL,
+EMAIL VARCHAR (50) NOT NULL,
+RIGESTERATION_DATE DATE,
+LAST_LOGIN DATE,
+primary key (ID),
+CHECK (RIGESTERATION_DATE <= LAST_LOGIN)
+);
+
+
+
+CREATE TABLE GENRE (
+ID INT auto_increment,
+GENRE_NAME VARCHAR (50),
+primary key (ID)
+);
+
+CREATE TABLE AUTHOR (
+ID INT auto_increment,
+AUTHOR_NAME VARCHAR (100),
+primary key(ID)
+);
+
+CREATE TABLE CATEGORY (
+ID INT auto_increment,
+CATEGORY_TYPE VARCHAR (50),
+primary key (ID)
+);
+
+
+CREATE TABLE BOOK (
+ID INT auto_increment,
+GENRE_ID INT NOT NULL,
+AUTHOR_ID INT NOT NULL,
+TITLE VARCHAR (100) NOT NULL,
+RELEASED_DATE DATE,
+primary key (ID),
+foreign key (GENRE_ID) references GENRE (ID),
+foreign key (AUTHOR_ID) references AUTHOR (ID)
+);
+
+CREATE TABLE BOOKSHELF (
+ID INT auto_increment,
+USER_ID INT NOT NULL,
+BOOK_ID INT NOT NULL,
+CATEGORY_ID INT NOT NULL,
+ADDED_DATE DATE,
+primary key (ID),
+foreign key (USER_ID) references USERS(ID),
+foreign key (BOOK_ID) references BOOK (ID),
+foreign key (CATEGORY_ID) references CATEGORY (ID)
+);
+
+CREATE TABLE BOOK_CLUB (
+ID INT auto_increment,
+USER_ID INT NOT NULL,
+CLUB_NAME VARCHAR (100) NOT NULL,
+JOINED_DATE DATE,
+DESCRIPTION VARCHAR (300) NOT NULL,
+primary key (ID),
+foreign key (USER_ID) references USERS (ID)
+);
+
+CREATE TABLE TAG (
+ID INT auto_increment,
+USER_ID INT NOT NULL,
+BOOK_ID INT NOT NULL,
+GENRE_ID INT NOT NULL,
+TAG_NAME VARCHAR (50),
+primary key (ID),
+foreign key (USER_ID) references USERS (ID),
+foreign key (BOOK_ID) references BOOK (ID),
+foreign key (GENRE_ID) references GENRE (ID)
+);
+
+CREATE TABLE REVIEW (
+ID INT auto_increment,
+USER_ID INT NOT NULL,
+BOOK_ID INT NOT NULL,
+RATE INT NOT NULL,
+REVIEW_TEXT VARCHAR (1000) NOT NULL,
+REVIEW_DATE DATE,
+primary key (ID),
+foreign key (USER_ID) references USERS (ID),
+foreign key (BOOK_ID) references BOOK (ID),
+CHECK (RATE >= 1 AND RATE <= 5)
+);
+
+CREATE TABLE FOLLOW (
+FOLLOWER_USER_ID INT NOT NULL,
+FOLLOWING_USER_ID INT NOT NULL,
+foreign key (FOLLOWER_USER_ID) references USERS (ID),
+foreign key (FOLLOWING_USER_ID) references USERS (ID)
+);
